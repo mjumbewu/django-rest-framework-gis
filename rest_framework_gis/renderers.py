@@ -46,7 +46,7 @@ class GeoJSONRenderer(JSONRenderer):
             
         feature = {
           'type': 'Feature',
-          'geometry': geometry.json,
+          'geometry': json.loads(geometry.json), #FIXME: is there a better way to do this?
           'properties': data,
         }
         
