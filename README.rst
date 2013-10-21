@@ -29,7 +29,7 @@ If you want to render your model as a GeoJSON ``Feature``, use the renderer.
         ...
 
 This renderer assumes a field names ``'geometry'`` to use as the geometry field
-in the ``Feature``. To use a different field, specify a ``geometry_field`` 
+in the ``Feature``. To use a different field, specify a ``geometry_field_name`` 
 string on the view.
 
 If you want to just use a field as a GeoJSON geometry, use the serializer field.
