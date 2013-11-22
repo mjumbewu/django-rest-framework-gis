@@ -2,9 +2,10 @@
 import json
 from rest_framework.renderers import JSONRenderer
 from django.contrib.gis.geos import GEOSGeometry
+from django.conf import settings
 
-# TODO: This should come from the settings, as we need it in multiple places.
-DEFAULT_GEOMETRY_FIELD_NAME = 'geometry'
+# QUESTION: Should the setting be called DEFAULT_GEOMETRY_FIELD_NAME or namespaced in the rest-framework settings?
+DEFAULT_GEOMETRY_FIELD_NAME = getattr(settings, 'DEFAULT_GEOMETRY_FIELD_NAME', 'geometry')
 
 class GeoJSONRenderer(JSONRenderer):
     """
@@ -13,7 +14,8 @@ class GeoJSONRenderer(JSONRenderer):
 
     media_type = 'application/json'
     format = 'json'
-    geometry_field = 'geometry'
+    geometry_field = DEFAULT_GEOMETRY_FIELD_NAME
+    
 
     def render(self, data, media_type=None, renderer_context=None):
         """
@@ -34,7 +36,7 @@ class GeoJSONRenderer(JSONRenderer):
         return super(GeoJSONRenderer, self).render(new_data, media_type, renderer_context)
     
     def get_feature(self, data, geom_field):
-        if 'geometry' not in data:
+        if geom_field not in data:
             return None
         
         geometry = data.pop(geom_field)
@@ -44,7 +46,7 @@ class GeoJSONRenderer(JSONRenderer):
             
         feature = {
           'type': 'Feature',
-          'geometry': geometry.json,
+          'geometry': json.loads(geometry.json), #FIXME: is there a better way to do this?
           'properties': data,
         }
         
