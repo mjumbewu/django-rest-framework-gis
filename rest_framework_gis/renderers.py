@@ -34,12 +34,12 @@ class FeatureRenderer(GeoJSONRenderer):
     feature collections
     """
 
-    geometry_field = DEFAULT_GEOMETRY_FIELD_NAME
+    geometry_field_name = DEFAULT_GEOMETRY_FIELD_NAME
 
     def render(self, data, media_type=None, renderer_context=None):
         renderer_context = renderer_context or {}
         geom_field = getattr(renderer_context.get('view'), 'geometry_field_name',
-                             DEFAULT_GEOMETRY_FIELD_NAME)
+                             self.geometry_field_name)
 
         if isinstance(data, list):
             new_data = OrderedDict([

@@ -28,25 +28,15 @@ If you want to render your model as a GeoJSON ``Feature``, use the renderer.
         parser_classes = (GeoJSONParser, ) + api_settings.DEFAULT_PARSER_CLASSES
         ...
 
-This renderer assumes a field names ``'geometry'`` to use as the geometry field
-in the ``Feature``. To use a different field, specify a ``geometry_field_name`` 
-string on the view.
+In your serializers, use the ``serializers.GeometryField`` for your geometry
+fields (or use the ``serializers.GeometryModelSerializer``, which will use the
+``GeometryField`` automatically). The ``GeoJSONRenderer`` will render geometry
+fields as GeoJSON geometries.
 
-If you want to just use a field as a GeoJSON geometry, use the serializer field.
-
-*serializers.py*::
-
-    from rest_framework.serializers import ModelSerializer
-    from rest_framework_gis.serializers import GeometryField
-    from .models import MyModel
-    
-    class MySerializer (ModelSerializer):
-        geometry = GeometryField()
-        
-        class Meta:
-            model = MyModel
-        
-        ...
+Also available is the ``FeatureRenderer``, which will render a collection of
+models with geometries as a GeoJSON feature collection. This renderer assumes a
+field named ``'geometry'``.  To use a different field name, override the value
+of the ``geometry_field_name`` attribute the renderer or the view.
 
 For more information about using renderers with Django REST Framework, see the
 `API Guide <http://django-rest-framework.org/api-guide/renderers.html>`_ or the
